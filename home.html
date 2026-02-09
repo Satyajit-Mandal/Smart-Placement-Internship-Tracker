@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Placement / Internship Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="theme-picker">
+  <span data-theme="blue"></span>
+  <span data-theme="purple"></span>
+  <span data-theme="green"></span>
+  <span data-theme="dark"></span>
+</div>
+
+
+  <header>
+    <h1>Smart Placement / Internship Tracker</h1>
+    <p>Track and manage your placement & internship applications</p>
+  </header>
+
+  <!-- Add Application Form -->
+  <section class="card add-application">
+
+    <h2>Add Application</h2>
+    <form id="applicationForm">
+
+  <div class="form-row">
+    <label>Company Name</label>
+    <input type="text" id="company" required />
+  </div>
+
+  <div class="form-row">
+    <label>Role / Position</label>
+    <input type="text" id="role" required />
+  </div>
+
+  <div class="form-row">
+    <label>Application Stage</label>
+    <select id="stage">
+      <option>Applied</option>
+      <option>Online Assessment</option>
+      <option>Interview</option>
+      <option>Offer</option>
+      <option>Rejected</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label>Result</label>
+    <select id="result">
+      <option>Pending</option>
+      <option>Cleared</option>
+      <option>Rejected</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label>Applied Date</label>
+    <input type="date" id="date" required />
+  </div>
+
+  <button type="submit">Add Application</button>
+</form>
+  </section>
+
+  <!-- Applications List -->
+  <section class="card">
+    <h2>Applications List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Role</th>
+          <th>Stage</th>
+          <th>Result</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="applicationsTable"></tbody>
+    </table>
+  </section>
+
+  <!-- Summary Section -->
+  <section class="card summary">
+    <h2>Summary</h2>
+    <div class="summary-grid">
+      <div>Total Applications: <span id="total">0</span></div>
+      <div>Interviews: <span id="interviews">0</span></div>
+      <div>Offers: <span id="offers">0</span></div>
+      <div>Rejections: <span id="rejections">0</span></div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
