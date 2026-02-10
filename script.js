@@ -1,12 +1,16 @@
+/* APPLICATION DATA */
 let applications = JSON.parse(localStorage.getItem("applications")) || [];
 
+/* DOM ELEMENTS */
 const form = document.getElementById("applicationForm");
 const tableBody = document.getElementById("applicationsTable");
 
+/* ADD APPLICATION */
 form.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const app = {
+  const application = {
+    id: Date.now(),
     company: document.getElementById("company").value,
     role: document.getElementById("role").value,
     stage: document.getElementById("stage").value,
@@ -14,21 +18,23 @@ form.addEventListener("submit", function (e) {
     date: document.getElementById("date").value
   };
 
-  applications.push(app);
-  saveAndRender();
+  applications.push(application);
+  saveData();
   form.reset();
 });
 
-function saveAndRender() {
+/* SAVE + RENDER */
+function saveData() {
   localStorage.setItem("applications", JSON.stringify(applications));
   renderApplications();
   renderSummary();
 }
 
+/* RENDER TABLE */
 function renderApplications() {
   tableBody.innerHTML = "";
 
-  applications.forEach((app, index) => {
+  applications.forEach(app => {
     const row = document.createElement("tr");
 
     row.innerHTML = `
@@ -38,7 +44,7 @@ function renderApplications() {
       <td>${app.result}</td>
       <td>${app.date}</td>
       <td>
-        <button class="delete-btn" onclick="deleteApplication(${index})">
+        <button class="delete-btn" data-id="${app.id}">
           Delete
         </button>
       </td>
@@ -48,42 +54,45 @@ function renderApplications() {
   });
 }
 
-function deleteApplication(index) {
-  applications.splice(index, 1);
-  saveAndRender();
-}
+/* DELETE */
+tableBody.addEventListener("click", function (e) {
+  if (e.target.classList.contains("delete-btn")) {
+    const id = Number(e.target.dataset.id);
+    applications = applications.filter(app => app.id !== id);
+    saveData();
+  }
+});
 
+/* SUMMARY */
 function renderSummary() {
   document.getElementById("total").textContent = applications.length;
   document.getElementById("interviews").textContent =
-    applications.filter(a => a.stage === "Interview").length;
+    applications.filter(app => app.stage === "Interview").length;
   document.getElementById("offers").textContent =
-    applications.filter(a => a.stage === "Offer").length;
+    applications.filter(app => app.stage === "Offer").length;
   document.getElementById("rejections").textContent =
-    applications.filter(a => a.stage === "Rejected" || a.result === "Rejected").length;
+    applications.filter(app =>
+      app.stage === "Rejected" || app.result === "Rejected"
+    ).length;
 }
 
-renderApplications();
-renderSummary();
+/* THEME SWITCHER */
 const themes = {
-  blue: "linear-gradient(135deg, #1e3c72, #2a5298, #6dd5fa)",
-  purple: "linear-gradient(135deg, #41295a, #2F0743)",
-  green: "linear-gradient(135deg, #11998e, #38ef7d)",
-  dark: "linear-gradient(135deg, #232526, #414345)"
+  blue: "linear-gradient(135deg, #0f4c81, #4fc3f7)",
+  orange: "linear-gradient(135deg, #ff8c00, #ffb347)",
+  green: "linear-gradient(135deg, #1b7f5a, #4caf50)",
+  yellow: "linear-gradient(135deg, #f9a825, #fff176)"
 };
 
 document.querySelectorAll(".theme-picker span").forEach(color => {
   color.addEventListener("click", () => {
-    const theme = color.getAttribute("data-theme");
-    document.documentElement.style.setProperty(
-      "--bg-gradient",
-      themes[theme]
-    );
+    const theme = color.dataset.theme;
+    document.documentElement.style.setProperty("--bg-gradient", themes[theme]);
     localStorage.setItem("bgTheme", theme);
   });
 });
 
-/* Load saved theme */
+/* LOAD SAVED THEME */
 const savedTheme = localStorage.getItem("bgTheme");
 if (savedTheme && themes[savedTheme]) {
   document.documentElement.style.setProperty(
@@ -91,3 +100,7 @@ if (savedTheme && themes[savedTheme]) {
     themes[savedTheme]
   );
 }
+
+/* INITIAL RENDER */
+renderApplications();
+renderSummary();
